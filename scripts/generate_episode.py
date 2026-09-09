@@ -89,6 +89,13 @@ def post_with_retry(url, *, headers, json_body, timeout=180, attempts=5, label="
                     "Either create a new key inside a workspace at console.anthropic.com, or set "
                     "the ANTHROPIC_WORKSPACE_ID repo variable to your workspace id."
                 )
+            elif '"SERVICE_DISABLED"' in resp.text:
+                # Gemini-TTS runs on Vertex AI, which is a separate API to switch on.
+                try:
+                    detail = resp.json()["error"]["message"]
+                except (ValueError, KeyError):
+                    detail = resp.text[:800]
+                raise SystemExit(f"{label}: a required Google API is not enabled.\n\n{detail}")
             else:
                 raise SystemExit(f"{label} failed with HTTP {resp.status_code}: {resp.text[:800]}")
         if attempt < attempts:
