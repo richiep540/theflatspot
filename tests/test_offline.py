@@ -147,6 +147,31 @@ out = g.drop_covered(buckets, covered, 21)
 check("covered story dropped when alternatives exist",
       [i["link"] for i in out["skate"]], ["http://c"])
 
+print("\n-- multi-speaker batching --")
+mk = lambda seg, txt: {"speaker": "Mackie", "text": txt, "spoken": txt, "segment": seg}
+turns = [mk("open", "word " * 100) for _ in range(10)]
+batches = g.batch_turns(turns, 3200)
+check("batches respect the byte cap",
+      all(sum(len(t["spoken"].encode()) for t in b) <= 3200 for b in batches), True)
+check("no turn lost in batching", sum(len(b) for b in batches), len(turns))
+mixed = [mk("open", "hello"), mk("open", "again"), mk("skate", "new bit")]
+check("batches never straddle a segment",
+      [[t["segment"] for t in b] for b in g.batch_turns(mixed, 3200)],
+      [["open", "open"], ["skate"]])
+check("a single oversized turn still gets its own batch",
+      len(g.batch_turns([mk("open", "x" * 9000)], 3200)), 1)
+
+print("\n-- tts config --")
+check("engine is known", cfg.get("tts_engine") in ("gemini", "chirp3"), True)
+check("every host has a gemini voice",
+      all(h.get("gemini_voice") for h in cfg["hosts"]), True)
+check("gemini voices are bare names, not Chirp3 ids",
+      all("-" not in h["gemini_voice"] for h in cfg["hosts"]), True)
+check("style prompt is under the 4000 byte API limit",
+      len(cfg["gemini_tts_style_prompt"].encode()) <= 4000, True)
+check("batch bytes leave room for the prompt",
+      cfg["multispeaker_batch_bytes"] + len(cfg["gemini_tts_style_prompt"].encode()) <= 8000, True)
+
 print("\n-- duration formatting --")
 for ms, want in [(1000, "0:01"), (61_000, "1:01"), (1_812_000, "30:12"), (3_661_000, "1:01:01")]:
     check(f"format_duration({ms})", g.format_duration(ms), want)

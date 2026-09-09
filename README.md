@@ -140,7 +140,31 @@ python scripts/make_cover.py
 which lands at about thirty minutes at Chirp 3: HD's natural pace. Scale them all up or down
 together to change the runtime. Roughly 155 words per minute.
 
-**Voices** — `hosts[].voice_name`. Preview at
+**How the hosts sound** — this is the biggest lever, and it lives in `gemini_tts_style_prompt`.
+The pipeline uses Gemini-TTS multi-speaker synthesis: the whole exchange goes to Google in one
+request per batch (about 13 per episode), so intonation carries across turns and Google paces the
+gaps itself. That is what stops it sounding like two announcers reading alternate paragraphs.
+The style prompt is plain English direction, the way you'd brief an actor — describe each host's
+character, the accent, the pace, how they react to each other. Rewrite it freely; it is the
+fastest way to change the feel of the show.
+
+Hear a change without generating a full episode:
+
+```bash
+GOOGLE_TTS_API_KEY=... python scripts/generate_episode.py --smoke-test
+```
+
+That voices a six-line sample to `smoke_test.mp3` in a few seconds, for a fraction of a penny.
+
+`gemini_tts_model` picks the model (`gemini-2.5-flash-tts` is the stable one;
+`gemini-2.5-pro-tts` and `gemini-3.1-flash-tts-preview` also exist). `hosts[].gemini_voice` is
+the voice per host — bare names like `Schedar`, `Sulafat`, `Kore`, `Charon`, `Puck`.
+
+Setting `"tts_engine": "chirp3"` reverts to the original one-request-per-turn Chirp 3: HD path,
+which uses `hosts[].voice_name` and `tts_speaking_rate` instead. It sounds flatter, but it is
+there if the Gemini models ever cause trouble.
+
+**Chirp 3: HD voices** (only used when `tts_engine` is `chirp3`) — `hosts[].voice_name`. Preview at
 [cloud.google.com/text-to-speech](https://cloud.google.com/text-to-speech). Any `en-GB-Chirp3-HD-*`
 voice works; keep `google_tts_language_code` in step if you switch locale. `tts_speaking_rate`
 nudges the pace (1.0 is natural, 1.05–1.1 gives it a bit more urgency).

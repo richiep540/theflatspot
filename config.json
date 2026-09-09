@@ -116,12 +116,19 @@
   ],
 
   "hosts": [
-    { "name": "Mackie", "voice_name": "en-GB-Chirp3-HD-Schedar" },
-    { "name": "Tess", "voice_name": "en-GB-Chirp3-HD-Sulafat" }
+    { "name": "Mackie", "voice_name": "en-GB-Chirp3-HD-Schedar", "gemini_voice": "Schedar" },
+    { "name": "Tess", "voice_name": "en-GB-Chirp3-HD-Sulafat", "gemini_voice": "Sulafat" }
   ],
 
   "anthropic_model": "claude-sonnet-5",
   "max_tokens_per_segment": 8000,
+
+  "tts_engine": "gemini",
+  "gemini_tts_model": "gemini-2.5-flash-tts",
+  "gemini_tts_style_prompt": "This is a weekly British action-sports podcast. Two friends who genuinely ride are talking to each other, not reading to an audience. Mackie is warm, dry and a bit deadpan, with a slow build when something excites him. Tess is quicker, sharper, laughs easily and jumps in when she disagrees. Both speak in natural British accents at a relaxed, unhurried conversational pace. Let them react to each other: real emphasis on the words that matter, genuine warmth and surprise, unhurried pauses for thought, and the odd overlap where one picks up the other's energy. Never a newsreader cadence, never uniform, never rushed.",
+  "multispeaker_batch_bytes": 3200,
+  "batch_gap_ms": 140,
+
   "google_tts_language_code": "en-GB",
   "tts_speaking_rate": 1.0,
   "turn_gap_ms": 320,

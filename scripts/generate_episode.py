@@ -558,6 +558,62 @@ def chunk_text(text, max_bytes=TTS_MAX_BYTES):
 
 # -------------------------------------------------------------------- audio
 
+def batch_turns(turns, max_bytes):
+    """Group consecutive turns into multi-speaker requests.
+
+    Gemini-TTS voices a whole exchange in one call, which is what makes it sound
+    like a conversation rather than a queue of announcements: intonation carries
+    across turns and the model paces the gaps itself. Batches never straddle a
+    segment boundary, so the segment pauses stay deliberate.
+    """
+    batches, current, size = [], [], 0
+    for turn in turns:
+        cost = len(turn["spoken"].encode("utf-8")) + len(turn["speaker"]) + 20
+        crosses_segment = current and turn.get("segment") != current[-1].get("segment")
+        if current and (size + cost > max_bytes or crosses_segment):
+            batches.append(current)
+            current, size = [], 0
+        current.append(turn)
+        size += cost
+    if current:
+        batches.append(current)
+    return batches
+
+
+def synthesize_multispeaker(batch, config):
+    """One request, many turns — returns LINEAR16 WAV bytes."""
+    aliases = {h["name"]: re.sub(r"[^A-Za-z0-9]", "", h["name"]) for h in config["hosts"]}
+    resp = post_with_retry(
+        f"https://texttospeech.googleapis.com/v1/text:synthesize?key={GOOGLE_TTS_API_KEY}",
+        headers={"content-type": "application/json"},
+        json_body={
+            "input": {
+                "prompt": config["gemini_tts_style_prompt"],
+                "multiSpeakerMarkup": {
+                    "turns": [
+                        {"speaker": aliases[t["speaker"]], "text": t["spoken"]}
+                        for t in batch
+                    ]
+                },
+            },
+            "voice": {
+                "languageCode": config["google_tts_language_code"],
+                "modelName": config["gemini_tts_model"],
+                "multiSpeakerVoiceConfig": {
+                    "speakerVoiceConfigs": [
+                        {"speakerAlias": aliases[h["name"]], "speakerId": h["gemini_voice"]}
+                        for h in config["hosts"]
+                    ]
+                },
+            },
+            "audioConfig": {"audioEncoding": "LINEAR16", "sampleRateHertz": 24000},
+        },
+        timeout=300,
+        label="Gemini TTS",
+    )
+    return base64.b64decode(resp.json()["audioContent"])
+
+
 def synthesize(text, voice_name, language_code, speaking_rate):
     resp = post_with_retry(
         f"https://texttospeech.googleapis.com/v1/text:synthesize?key={GOOGLE_TTS_API_KEY}",
@@ -574,6 +630,64 @@ def synthesize(text, voice_name, language_code, speaking_rate):
 
 
 def build_episode_audio(turns, config, out_path):
+    if config.get("tts_engine", "gemini") == "gemini":
+        return build_episode_audio_gemini(turns, config, out_path)
+    return build_episode_audio_chirp3(turns, config, out_path)
+
+
+def build_episode_audio_gemini(turns, config, out_path):
+    """Multi-speaker path: a handful of conversational batches, not 175 fragments."""
+    known = {h["name"] for h in config["hosts"]}
+    prepared = []
+    for turn in turns:
+        if turn["speaker"] not in known:
+            raise SystemExit(
+                f"No voice configured for speaker '{turn['speaker']}'. "
+                "Check the 'hosts' names in config.json."
+            )
+        spoken = normalize_for_speech(turn["text"])
+        if spoken:
+            prepared.append({**turn, "spoken": spoken})
+
+    batches = batch_turns(prepared, config.get("multispeaker_batch_bytes", 3200))
+    total_chars = sum(len(t["spoken"]) for t in prepared)
+    print(f"  {len(prepared)} turns -> {len(batches)} multi-speaker requests")
+
+    tmp_dir = os.path.join(ROOT, "_tmp_audio")
+    os.makedirs(tmp_dir, exist_ok=True)
+
+    combined = AudioSegment.silent(duration=400)
+    # Google paces the turns inside a batch, so these joins are only for the seams.
+    join_gap = AudioSegment.silent(duration=config.get("batch_gap_ms", 140))
+    segment_gap = AudioSegment.silent(duration=config.get("segment_gap_ms", 900))
+    previous_segment = batches[0][0].get("segment") if batches else None
+
+    for index, batch in enumerate(batches):
+        audio_bytes = synthesize_multispeaker(batch, config)
+        wav_path = os.path.join(tmp_dir, f"batch_{index}.wav")
+        with open(wav_path, "wb") as f:
+            f.write(audio_bytes)
+        clip = AudioSegment.from_file(wav_path, format="wav")
+        os.remove(wav_path)
+
+        if batch[0].get("segment") != previous_segment:
+            combined += segment_gap
+            previous_segment = batch[0].get("segment")
+        elif index:
+            combined += join_gap
+        combined += clip
+        print(f"    batch {index + 1}/{len(batches)}"
+              f" ({len(batch)} turns, {len(combined) / 60000:.1f} min so far)")
+        time.sleep(0.2)
+
+    combined.export(out_path, format="mp3", bitrate="128k",
+                    tags={"artist": config["podcast_author"], "album": config["podcast_title"]})
+    print(f"  {total_chars:,} characters sent to TTS")
+    return len(combined)
+
+
+def build_episode_audio_chirp3(turns, config, out_path):
+    """Original one-call-per-turn path. Kept as a fallback."""
     voices = {h["name"]: h["voice_name"] for h in config["hosts"]}
     language_code = config["google_tts_language_code"]
     speaking_rate = config.get("tts_speaking_rate", 1.0)
@@ -787,6 +901,25 @@ def save_covered(used_links, history_days):
 
 # ---------------------------------------------------------------------- main
 
+def smoke_test(config):
+    """Voice a short scripted exchange so the TTS settings can be judged by ear
+    without generating (or paying for) a whole episode. Needs only the Google key."""
+    a, b = config["hosts"][0]["name"], config["hosts"][1]["name"]
+    sample = [
+        {"speaker": a, "text": "Right, before we do anything else, I need you to hear this one line.", "segment": "demo"},
+        {"speaker": b, "text": "Go on.", "segment": "demo"},
+        {"speaker": a, "text": "Santa Cruz redesigned the Blur. Completely. More travel, slacker geometry, the lot. And they did it without telling anyone first.", "segment": "demo"},
+        {"speaker": b, "text": "Hang on. Without telling anyone? That's either enormous confidence or someone's had a very long week.", "segment": "demo"},
+        {"speaker": a, "text": "Bit of both, I reckon.", "segment": "demo"},
+        {"speaker": b, "text": "So what's it actually like to ride? Because the spec sheet says one thing and the trail usually says another.", "segment": "demo"},
+    ]
+    out = os.path.join(ROOT, "smoke_test.mp3")
+    engine = config.get("tts_engine", "gemini")
+    print(f"Voicing a {len(sample)}-turn sample with the '{engine}' engine...")
+    ms = build_episode_audio(sample, config, out)
+    print(f"\nWrote {out} ({format_duration(ms)}). Have a listen.")
+
+
 def main():
     args = set(sys.argv[1:])
     feeds_only = "--feeds-only" in args
@@ -794,6 +927,11 @@ def main():
 
     config = load_config()
     os.makedirs(EPISODES_DIR, exist_ok=True)
+
+    if "--smoke-test" in args:
+        if not GOOGLE_TTS_API_KEY:
+            raise SystemExit("GOOGLE_TTS_API_KEY is not set.")
+        return smoke_test(config)
 
     if not feeds_only and not ANTHROPIC_API_KEY:
         raise SystemExit("ANTHROPIC_API_KEY is not set.")
