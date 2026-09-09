@@ -6,7 +6,7 @@ The Flat Spot — weekly episode generator.
 2. Drops stories already covered in recent episodes (docs/covered_links.json)
 3. Asks Claude (Anthropic API) to write the episode one segment at a time, so a
    ~30 minute (~4,700 word) script never gets truncated mid-JSON
-4. Turns each turn into audio with Google Cloud Text-to-Speech (Chirp 3: HD voices)
+4. Voices it with Google Cloud Gemini-TTS multi-speaker synthesis, a batch of turns per call
 5. Stitches it into one mp3 in docs/episodes/
 6. Updates docs/episodes.json, regenerates docs/feed.xml and docs/index.html
 
@@ -15,7 +15,8 @@ Run with:
 
 Useful flags for local testing:
     --feeds-only    fetch and print the story buckets, no API keys needed
-    --script-only   write the script to docs/last_script.json, skip audio (needs Anthropic key)
+    --script-only   write the script to docs/transcripts/, skip audio (needs Anthropic key)
+    --smoke-test    voice a six-line sample to smoke_test.wav (needs Google key only)
 """
 
 import os
@@ -558,6 +559,15 @@ def chunk_text(text, max_bytes=TTS_MAX_BYTES):
 
 # -------------------------------------------------------------------- audio
 
+def export_audio(clip, out_path, config):
+    """WAV needs no ffmpeg, which keeps --smoke-test runnable on a bare machine."""
+    if out_path.endswith(".wav"):
+        clip.export(out_path, format="wav")
+    else:
+        clip.export(out_path, format="mp3", bitrate="128k",
+                    tags={"artist": config["podcast_author"], "album": config["podcast_title"]})
+
+
 def batch_turns(turns, max_bytes):
     """Group consecutive turns into multi-speaker requests.
 
@@ -680,8 +690,7 @@ def build_episode_audio_gemini(turns, config, out_path):
               f" ({len(batch)} turns, {len(combined) / 60000:.1f} min so far)")
         time.sleep(0.2)
 
-    combined.export(out_path, format="mp3", bitrate="128k",
-                    tags={"artist": config["podcast_author"], "album": config["podcast_title"]})
+    export_audio(combined, out_path, config)
     print(f"  {total_chars:,} characters sent to TTS")
     return len(combined)
 
@@ -730,8 +739,7 @@ def build_episode_audio_chirp3(turns, config, out_path):
         if (index + 1) % 25 == 0:
             print(f"    {index + 1}/{len(turns)} turns voiced ({len(combined) / 60000:.1f} min so far)")
 
-    combined.export(out_path, format="mp3", bitrate="128k",
-                    tags={"artist": config["podcast_author"], "album": config["podcast_title"]})
+    export_audio(combined, out_path, config)
     print(f"  {total_chars:,} characters sent to TTS")
     return len(combined)  # milliseconds
 
@@ -913,7 +921,7 @@ def smoke_test(config):
         {"speaker": a, "text": "Bit of both, I reckon.", "segment": "demo"},
         {"speaker": b, "text": "So what's it actually like to ride? Because the spec sheet says one thing and the trail usually says another.", "segment": "demo"},
     ]
-    out = os.path.join(ROOT, "smoke_test.mp3")
+    out = os.path.join(ROOT, "smoke_test.wav")
     engine = config.get("tts_engine", "gemini")
     print(f"Voicing a {len(sample)}-turn sample with the '{engine}' engine...")
     ms = build_episode_audio(sample, config, out)
