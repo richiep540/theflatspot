@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+     xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+     xmlns:atom="http://www.w3.org/2005/Atom"
+     xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>The Flat Spot</title>
+    <link>https://richiep540.github.io/theflatspot</link>
+    <atom:link href="https://richiep540.github.io/theflatspot/feed.xml" rel="self" type="application/rss+xml" />
+    <description>A weekly thirty-minute ride through skateboarding, mountain biking, snowboarding and surfing. Contest results and rankings, the week's biggest news, new boards, bikes and gear tech, plus what the household names and the up-and-comers are up to.</description>
+    <language>en-gb</language>
+    <copyright>Richard Price</copyright>
+    <lastBuildDate>Wed, 09 Sep 2026 15:22:55 GMT</lastBuildDate>
+    <generator>The Flat Spot pipeline</generator>
+    <image>
+      <url>https://richiep540.github.io/theflatspot/cover.jpg</url>
+      <title>The Flat Spot</title>
+      <link>https://richiep540.github.io/theflatspot</link>
+    </image>
+    <itunes:author>Richard Price</itunes:author>
+    <itunes:subtitle>Skate. MTB. Snow. Surf. Weekly.</itunes:subtitle>
+    <itunes:summary>A weekly thirty-minute ride through skateboarding, mountain biking, snowboarding and surfing. Contest results and rankings, the week's biggest news, new boards, bikes and gear tech, plus what the household names and the up-and-comers are up to.</itunes:summary>
+    <itunes:type>episodic</itunes:type>
+    <itunes:explicit>false</itunes:explicit>
+    <itunes:image href="https://richiep540.github.io/theflatspot/cover.jpg" />
+    <itunes:owner>
+      <itunes:name>Richard Price</itunes:name>
+      <itunes:email>richard.price@dezrez.com</itunes:email>
+    </itunes:owner>
+    <itunes:category text="Sports">
+      <itunes:category text="Wilderness" />
+    </itunes:category>
+    <item>
+      <title>9 September 2026 — The Flat Spot</title>
+      <link>https://richiep540.github.io/theflatspot/episodes/2026-09-09.mp3</link>
+      <description>This week (Wednesday 9 September 2026) across skate, MTB, snow and surf — Skateboarding: Isaac Relis – Cold Approach; Skateboarder stops in PA as he travels from Mississippi to NYC for mental health awareness; No End: Shor West – “Don’t cry over spilled beer.” | Mountain biking: First Look: Yeti ASR Lunch Ride; 30-mile Cline Buttes trail network is now complete in Central Oregon; Tumalo Ridge-South Fork loop mountain bike ride | Snowboarding: Canada’s Best-Kept Secret | Golden, BC; Camelback Resort, PA, is Adding 3 New Trails for the 2026-27 Season; Pennsylvania Ski Resort Adding New Trails For The First Time in 30 Years | Surfing: Jamie O'Brien Tow-Surfs Flooded Hawaii Streets During Hurricane Lowell (Video); Billabong founder Gordon “Greasy” Merchant, 83, just bought a million-dollar V12 Lamborghini; Early Forecast: 2026 Trestles Pro</description>
+      <itunes:summary>This week (Wednesday 9 September 2026) across skate, MTB, snow and surf — Skateboarding: Isaac Relis – Cold Approach; Skateboarder stops in PA as he travels from Mississippi to NYC for mental health awareness; No End: Shor West – “Don’t cry over spilled beer.” | Mountain biking: First Look: Yeti ASR Lunch Ride; 30-mile Cline Buttes trail network is now complete in Central Oregon; Tumalo Ridge-South Fork loop mountain bike ride | Snowboarding: Canada’s Best-Kept Secret | Golden, BC; Camelback Resort, PA, is Adding 3 New Trails for the 2026-27 Season; Pennsylvania Ski Resort Adding New Trails For The First Time in 30 Years | Surfing: Jamie O'Brien Tow-Surfs Flooded Hawaii Streets During Hurricane Lowell (Video); Billabong founder Gordon “Greasy” Merchant, 83, just bought a million-dollar V12 Lamborghini; Early Forecast: 2026 Trestles Pro</itunes:summary>
+      <itunes:author>Richard Price</itunes:author>
+      <itunes:duration>24:18</itunes:duration>
+      <itunes:episodeType>full</itunes:episodeType>
+      <itunes:explicit>false</itunes:explicit>
+      <itunes:image href="https://richiep540.github.io/theflatspot/cover.jpg" />
+      <pubDate>Wed, 09 Sep 2026 15:22:55 GMT</pubDate>
+      <enclosure url="https://richiep540.github.io/theflatspot/episodes/2026-09-09.mp3" length="23328863" type="audio/mpeg" />
+      <guid isPermaLink="false">the-flat-spot-2026-09-09</guid>
+    </item>
+  </channel>
+</rss>
