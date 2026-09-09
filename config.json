@@ -75,42 +75,42 @@
       "id": "open",
       "label": "Cold open and the week's headlines",
       "sports": ["skate", "mtb", "snow", "surf"],
-      "words": 500,
+      "words": 620,
       "brief": "Open cold with the single most striking thing that happened this week across any of the four sports, then welcome listeners, name the show and the date, and run a quick headline-by-headline tease of what is coming up in each of the four sport segments. Keep it fast and punchy."
     },
     {
       "id": "skate",
       "label": "Skateboarding",
       "sports": ["skate"],
-      "words": 900,
+      "words": 1100,
       "brief": "The skateboarding segment. Contest and event results, video parts and releases, brand and team news, board and shoe tech, and any rider on the rise worth naming."
     },
     {
       "id": "mtb",
       "label": "Mountain biking",
       "sports": ["mtb"],
-      "words": 900,
+      "words": 1100,
       "brief": "The mountain biking segment. World Cup downhill and enduro racing, results and championship standings, bike and component tech, trail and event news, and riders to watch."
     },
     {
       "id": "snow",
       "label": "Snowboarding",
       "sports": ["snow"],
-      "words": 900,
+      "words": 1100,
       "brief": "The snowboarding segment. Competition news and rankings, resort and season conditions, board and binding tech, film projects, and riders on the way up. Note that the northern hemisphere season is seasonal: out of season, lean into southern hemisphere riding, gear launches for the coming winter, athlete news and off-season projects."
     },
     {
       "id": "surf",
       "label": "Surfing",
       "sports": ["surf"],
-      "words": 900,
+      "words": 1100,
       "brief": "The surfing segment. Championship Tour events and results, swells and standout waves, board and wetsuit tech, wave pools, and emerging talent."
     },
     {
       "id": "close",
       "label": "Tech round-up, ones to watch and sign-off",
       "sports": ["skate", "mtb", "snow", "surf"],
-      "words": 600,
+      "words": 700,
       "brief": "A cross-sport wrap: one short tech or kit round-up pulling threads from more than one sport, a quick 'ones to watch' on up-and-coming competitors, a look ahead to what is on next week's calendar, and a warm sign-off."
     }
   ],
@@ -126,7 +126,7 @@
   "tts_speaking_rate": 1.0,
   "turn_gap_ms": 320,
   "segment_gap_ms": 900,
-  "target_word_count": 4700,
+  "target_word_count": 5720,
   "cover_image": "cover.jpg",
   "sponsor_ad_text": ""
 }

@@ -22,7 +22,8 @@ print("\n-- config sanity --")
 cfg = g.load_config()
 hosts = [h["name"] for h in cfg["hosts"]]
 check("two hosts", len(hosts), 2)
-check("segment words total ~4700", sum(s["words"] for s in cfg["segments"]), 4700)
+check("segment words total matches target_word_count",
+      sum(s["words"] for s in cfg["segments"]), cfg["target_word_count"])
 sports_in_segments = {s for seg in cfg["segments"] for s in seg["sports"]}
 check("segments only use known sports", sports_in_segments - set(cfg["sport_labels"]), set())
 check("every feed has a known sport",
