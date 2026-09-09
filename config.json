@@ -1,0 +1,132 @@
+{
+  "podcast_title": "The Flat Spot",
+  "podcast_subtitle": "Skate. MTB. Snow. Surf. Weekly.",
+  "podcast_description": "A weekly thirty-minute ride through skateboarding, mountain biking, snowboarding and surfing. Contest results and rankings, the week's biggest news, new boards, bikes and gear tech, plus what the household names and the up-and-comers are up to.",
+  "podcast_author": "Richard Price",
+  "podcast_owner_email": "richard.price@dezrez.com",
+  "podcast_language": "en-gb",
+  "podcast_category": "Sports",
+  "podcast_subcategory": "Wilderness",
+  "podcast_link": "",
+
+  "lookback_hours": 192,
+  "history_days": 21,
+  "max_items_per_sport": 18,
+  "max_items_per_feed": 8,
+  "blocked_sources": [
+    "newsbreak", "umlconnector", "msn.com", "yahoo", "breitbart",
+    "sportskeeda", "the times of india", "karlobag"
+  ],
+
+  "feeds": [
+    { "url": "https://freeskatemag.com/feed/", "sport": "skate" },
+    { "url": "https://www.jenkemmag.com/home/feed/", "sport": "skate" },
+    { "url": "https://skateism.com/feed/", "sport": "skate" },
+    {
+      "url": "https://news.google.com/rss/search?q=skateboarding+OR+%22Street+League%22+OR+%22SLS+skateboarding%22+OR+%22X+Games+skate%22+when:8d&hl=en-GB&gl=GB&ceid=GB:en",
+      "sport": "skate",
+      "require_any": ["skateboard", "skater", "skatepark", "skate park", "street league", "x games", "vert ", "olympic skate"]
+    },
+
+    { "url": "https://www.pinkbike.com/pinkbike_xml_feed.php?news=1", "sport": "mtb" },
+    { "url": "https://www.singletracks.com/feed/", "sport": "mtb" },
+    { "url": "https://nsmb.com/feed/", "sport": "mtb" },
+    {
+      "url": "https://news.google.com/rss/search?q=%22mountain+bike%22+(%22World+Cup%22+OR+enduro+OR+downhill+OR+Crankworx)+when:8d&hl=en-GB&gl=GB&ceid=GB:en",
+      "sport": "mtb",
+      "require_any": ["mountain bike", "mountain biking", "mtb", "enduro", "downhill", "crankworx", "trail", "hardtail", "e-bike", "ebike"]
+    },
+
+    { "url": "https://www.whitelines.com/feed/", "sport": "snow" },
+    {
+      "url": "https://www.snowbrains.com/feed/",
+      "sport": "snow",
+      "require_any": ["snowboard", "halfpipe", "slopestyle", "big air", "freeride", "powder", "snowfall", "resort", "season pass", "backcountry", "avalanche", "terrain park", "x games", "fis "]
+    },
+    {
+      "url": "https://unofficialnetworks.com/feed/",
+      "sport": "snow",
+      "require_any": ["snowboard", "halfpipe", "slopestyle", "big air", "freeride", "powder", "snowfall", "resort", "season pass", "backcountry", "avalanche", "terrain park", "x games", "fis "]
+    },
+    {
+      "url": "https://news.google.com/rss/search?q=snowboarding+OR+snowboarder+OR+%22snowboard+World+Cup%22+OR+%22X+Games+snowboard%22+when:8d&hl=en-GB&gl=GB&ceid=GB:en",
+      "sport": "snow",
+      "require_any": ["snowboard", "halfpipe", "slopestyle", "big air", "x games", "freeride", "winter olympic", "winter olympian", "ski resort", "snowpark"]
+    },
+
+    { "url": "https://www.surfer.com/feed/", "sport": "surf" },
+    { "url": "https://beachgrit.com/feed/", "sport": "surf" },
+    {
+      "url": "https://news.google.com/rss/search?q=surfing+(%22Championship+Tour%22+OR+WSL+OR+Pipeline+OR+Teahupoo)+when:8d&hl=en-GB&gl=GB&ceid=GB:en",
+      "sport": "surf",
+      "require_any": ["surf", "wsl", "teahupo", "pipeline", "championship tour", "barrel", "swell", "wave pool"]
+    }
+  ],
+
+  "sport_labels": {
+    "skate": "Skateboarding",
+    "mtb": "Mountain biking",
+    "snow": "Snowboarding",
+    "surf": "Surfing"
+  },
+
+  "segments": [
+    {
+      "id": "open",
+      "label": "Cold open and the week's headlines",
+      "sports": ["skate", "mtb", "snow", "surf"],
+      "words": 500,
+      "brief": "Open cold with the single most striking thing that happened this week across any of the four sports, then welcome listeners, name the show and the date, and run a quick headline-by-headline tease of what is coming up in each of the four sport segments. Keep it fast and punchy."
+    },
+    {
+      "id": "skate",
+      "label": "Skateboarding",
+      "sports": ["skate"],
+      "words": 900,
+      "brief": "The skateboarding segment. Contest and event results, video parts and releases, brand and team news, board and shoe tech, and any rider on the rise worth naming."
+    },
+    {
+      "id": "mtb",
+      "label": "Mountain biking",
+      "sports": ["mtb"],
+      "words": 900,
+      "brief": "The mountain biking segment. World Cup downhill and enduro racing, results and championship standings, bike and component tech, trail and event news, and riders to watch."
+    },
+    {
+      "id": "snow",
+      "label": "Snowboarding",
+      "sports": ["snow"],
+      "words": 900,
+      "brief": "The snowboarding segment. Competition news and rankings, resort and season conditions, board and binding tech, film projects, and riders on the way up. Note that the northern hemisphere season is seasonal: out of season, lean into southern hemisphere riding, gear launches for the coming winter, athlete news and off-season projects."
+    },
+    {
+      "id": "surf",
+      "label": "Surfing",
+      "sports": ["surf"],
+      "words": 900,
+      "brief": "The surfing segment. Championship Tour events and results, swells and standout waves, board and wetsuit tech, wave pools, and emerging talent."
+    },
+    {
+      "id": "close",
+      "label": "Tech round-up, ones to watch and sign-off",
+      "sports": ["skate", "mtb", "snow", "surf"],
+      "words": 600,
+      "brief": "A cross-sport wrap: one short tech or kit round-up pulling threads from more than one sport, a quick 'ones to watch' on up-and-coming competitors, a look ahead to what is on next week's calendar, and a warm sign-off."
+    }
+  ],
+
+  "hosts": [
+    { "name": "Mackie", "voice_name": "en-GB-Chirp3-HD-Schedar" },
+    { "name": "Tess", "voice_name": "en-GB-Chirp3-HD-Sulafat" }
+  ],
+
+  "anthropic_model": "claude-sonnet-5",
+  "max_tokens_per_segment": 8000,
+  "google_tts_language_code": "en-GB",
+  "tts_speaking_rate": 1.0,
+  "turn_gap_ms": 320,
+  "segment_gap_ms": 900,
+  "target_word_count": 4700,
+  "cover_image": "cover.jpg",
+  "sponsor_ad_text": ""
+}

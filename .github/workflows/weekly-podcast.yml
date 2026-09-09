@@ -1,0 +1,63 @@
+name: Weekly podcast
+
+on:
+  # 05:30 UTC every Monday — episode is waiting before the Monday commute.
+  schedule:
+    - cron: "30 5 * * 1"
+  # Lets you run it by hand from the Actions tab.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-podcast
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      # Cheap guard: catches a broken script before it burns API credit.
+      - name: Run offline checks
+        run: python tests/test_offline.py
+
+      - name: Generate this week's episode
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GOOGLE_TTS_API_KEY: ${{ secrets.GOOGLE_TTS_API_KEY }}
+          PUBLIC_BASE_URL: ${{ vars.PUBLIC_BASE_URL }}
+        run: python scripts/generate_episode.py
+
+      - name: Commit and push the new episode
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          if git diff --staged --quiet; then
+            echo "Nothing changed — no commit."
+            exit 0
+          fi
+          git commit -m "Episode: $(date -u +'%Y-%m-%d')"
+          # Rebase first, or the push intermittently fails with "rejected — fetch first".
+          git pull --rebase origin main
+          git push
