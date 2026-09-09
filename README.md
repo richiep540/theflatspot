@@ -171,6 +171,10 @@ season is rather than padded.
 
 ## Known gotchas
 
+- **"This API key is not scoped to a workspace"** — the Anthropic key is organisation-scoped.
+  Either create a new key *inside a workspace* at console.anthropic.com (simplest, no config
+  change), or add an Actions **variable** `ANTHROPIC_WORKSPACE_ID` set to your workspace id,
+  which the workflow passes through as the `anthropic-workspace-id` header.
 - **402 from the TTS API** — billing isn't enabled on the Google Cloud project, or the
   Text-to-Speech API isn't turned on. Not a code bug. The script says so explicitly and stops.
 - **Truncated JSON from Claude** — the script now fails loudly with a clear message if a segment

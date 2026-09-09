@@ -43,6 +43,9 @@ TRANSCRIPTS_DIR = os.path.join(DOCS_DIR, "transcripts")
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 GOOGLE_TTS_API_KEY = os.environ.get("GOOGLE_TTS_API_KEY")
+# Only needed when the Anthropic key is organisation-scoped rather than tied to a
+# single workspace. A workspace-scoped key does not need this at all.
+ANTHROPIC_WORKSPACE_ID = os.environ.get("ANTHROPIC_WORKSPACE_ID", "").strip()
 # The public base URL where docs/ ends up being served, e.g.
 # https://yourusername.github.io/the-flat-spot
 PUBLIC_BASE_URL = os.environ.get("PUBLIC_BASE_URL", "").rstrip("/")
@@ -79,6 +82,12 @@ def post_with_retry(url, *, headers, json_body, timeout=180, attempts=5, label="
                 )
             if resp.status_code in (408, 429) or resp.status_code >= 500:
                 last_error = f"HTTP {resp.status_code}: {resp.text[:400]}"
+            elif "anthropic-workspace-id" in resp.text:
+                raise SystemExit(
+                    f"{label}: this Anthropic key is organisation-scoped, not workspace-scoped. "
+                    "Either create a new key inside a workspace at console.anthropic.com, or set "
+                    "the ANTHROPIC_WORKSPACE_ID repo variable to your workspace id."
+                )
             else:
                 raise SystemExit(f"{label} failed with HTTP {resp.status_code}: {resp.text[:800]}")
         if attempt < attempts:
@@ -297,13 +306,17 @@ is coming up, and keep it honest — do not fabricate news.
 
 
 def call_anthropic(prompt, model, max_tokens, label):
+    headers = {
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+    }
+    if ANTHROPIC_WORKSPACE_ID:
+        headers["anthropic-workspace-id"] = ANTHROPIC_WORKSPACE_ID
+
     resp = post_with_retry(
         "https://api.anthropic.com/v1/messages",
-        headers={
-            "x-api-key": ANTHROPIC_API_KEY,
-            "anthropic-version": "2023-06-01",
-            "content-type": "application/json",
-        },
+        headers=headers,
         json_body={
             "model": model,
             "max_tokens": max_tokens,
