@@ -10,7 +10,7 @@
     <description>A weekly thirty-minute ride through skateboarding, mountain biking, snowboarding and surfing. Contest results and rankings, the week's biggest news, new boards, bikes and gear tech, plus what the household names and the up-and-comers are up to.</description>
     <language>en-gb</language>
     <copyright>Richard Price</copyright>
-    <lastBuildDate>Wed, 09 Sep 2026 15:22:55 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 24 Sep 2026 06:07:53 GMT</lastBuildDate>
     <generator>The Flat Spot pipeline</generator>
     <image>
       <url>https://richiep540.github.io/theflatspot/cover.jpg</url>
@@ -30,6 +30,20 @@
     <itunes:category text="Sports">
       <itunes:category text="Wilderness" />
     </itunes:category>
+    <item>
+      <title>24 September 2026 — The Flat Spot</title>
+      <link>https://richiep540.github.io/theflatspot/episodes/2026-09-24.mp3</link>
+      <description>This week (Thursday 24 September 2026) across skate, MTB, snow and surf — Skateboarding: Jonny Palmer – Ease Up; “WISHBONE” BY ORCHARD PROVES BOSTON STILL KNOWS HOW TO MAKE A SHOP VID; SEA Games gold medalist Mazel Paris advances to the final of the women’s park skateboarding event. The 12-year-old placed fourth overall in the preliminaries, with a best score of 73.93 on her second run. Elizabeth Amador finished fourth in Heat 2 with 59.9 | Mountain biking: Mille Johnset Out of Whistler World Cup with Separated Shoulder; New EXT Aria V2 air shock is redesigned to fit more bike frames; The Top Mountain Bike Racers, Teams, and Countries In the World | Snowboarding: Tamarack Resort, ID, Invests Heavily in Snowmaking Ahead of 2026-27 Season; 60 Years of U.S. Ski and Snowboard Medalists Are Coming Together in New York; Øyvind Kirkhus Gets His Wings | Surfing: Quiksilver Festival Turns Up The Heat On French Nightlife (Photos); Surfers Bethany Hamilton and Felicity Palmateer fail “stress test of feminism” over Sweeney Milkers ad; Raglan's Manu Bay Back on WSL Championship Tour 2027</description>
+      <itunes:summary>This week (Thursday 24 September 2026) across skate, MTB, snow and surf — Skateboarding: Jonny Palmer – Ease Up; “WISHBONE” BY ORCHARD PROVES BOSTON STILL KNOWS HOW TO MAKE A SHOP VID; SEA Games gold medalist Mazel Paris advances to the final of the women’s park skateboarding event. The 12-year-old placed fourth overall in the preliminaries, with a best score of 73.93 on her second run. Elizabeth Amador finished fourth in Heat 2 with 59.9 | Mountain biking: Mille Johnset Out of Whistler World Cup with Separated Shoulder; New EXT Aria V2 air shock is redesigned to fit more bike frames; The Top Mountain Bike Racers, Teams, and Countries In the World | Snowboarding: Tamarack Resort, ID, Invests Heavily in Snowmaking Ahead of 2026-27 Season; 60 Years of U.S. Ski and Snowboard Medalists Are Coming Together in New York; Øyvind Kirkhus Gets His Wings | Surfing: Quiksilver Festival Turns Up The Heat On French Nightlife (Photos); Surfers Bethany Hamilton and Felicity Palmateer fail “stress test of feminism” over Sweeney Milkers ad; Raglan's Manu Bay Back on WSL Championship Tour 2027</itunes:summary>
+      <itunes:author>Richard Price</itunes:author>
+      <itunes:duration>27:19</itunes:duration>
+      <itunes:episodeType>full</itunes:episodeType>
+      <itunes:explicit>false</itunes:explicit>
+      <itunes:image href="https://richiep540.github.io/theflatspot/cover.jpg" />
+      <pubDate>Thu, 24 Sep 2026 06:07:53 GMT</pubDate>
+      <enclosure url="https://richiep540.github.io/theflatspot/episodes/2026-09-24.mp3" length="26217695" type="audio/mpeg" />
+      <guid isPermaLink="false">the-flat-spot-2026-09-24</guid>
+    </item>
     <item>
       <title>9 September 2026 — The Flat Spot</title>
       <link>https://richiep540.github.io/theflatspot/episodes/2026-09-09.mp3</link>
