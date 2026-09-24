@@ -62,6 +62,9 @@ if not GOOGLE_SERVICE_ACCOUNT_JSON:
 PUBLIC_BASE_URL = os.environ.get("PUBLIC_BASE_URL", "").rstrip("/")
 
 USER_AGENT = "Mozilla/5.0 (compatible; TheFlatSpotBot/1.0; podcast feed reader)"
+# Measured from the 9 September episode: 4,634 words of speech in 1,397 seconds.
+# The word targets in config.json are sized against this, so keep them in step.
+WORDS_PER_MINUTE = 199
 TTS_MAX_BYTES = 4000  # Google's hard limit is 5000 bytes per request
 
 
@@ -1062,7 +1065,8 @@ def main():
     print(f"\nWriting the script with {config['anthropic_model']}...")
     turns, used_links = write_script(config, buckets, date_label)
     total_words = sum(len(t["text"].split()) for t in turns)
-    print(f"Script complete: {len(turns)} turns, {total_words} words (~{total_words / 155:.0f} min)")
+    print(f"Script complete: {len(turns)} turns, {total_words} words "
+          f"(~{total_words / WORDS_PER_MINUTE:.0f} min of speech)")
 
     os.makedirs(TRANSCRIPTS_DIR, exist_ok=True)
     transcript_path = os.path.join(TRANSCRIPTS_DIR, f"{today.isoformat()}.json")
