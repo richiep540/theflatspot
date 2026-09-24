@@ -879,6 +879,20 @@ def save_episodes(episode_meta):
     return episodes
 
 
+def tracked_url(url, config):
+    """Wrap an episode URL in a download-analytics prefix.
+
+    GitHub Pages keeps no access logs, so without a prefix there is no way to
+    know whether anyone is listening. Applied when the feed is written rather
+    than when the URL is stored, so past episodes are counted too and removing
+    the prefix is a config change rather than a migration.
+    """
+    prefix = (config.get("download_prefix") or "").strip()
+    if not prefix or not url.startswith("http"):
+        return url
+    return prefix.rstrip("/") + "/" + url
+
+
 def write_feed(config, episodes):
     esc = saxutils.escape
     base = PUBLIC_BASE_URL or "."
@@ -888,6 +902,7 @@ def write_feed(config, episodes):
 
     items_xml = ""
     for ep in episodes:
+        audio = tracked_url(ep["audio_url"], config)
         items_xml += f"""
     <item>
       <title>{esc(ep['title'])}</title>
@@ -900,7 +915,7 @@ def write_feed(config, episodes):
       <itunes:explicit>false</itunes:explicit>
       <itunes:image href="{esc(cover_url)}" />
       <pubDate>{ep['pub_date']}</pubDate>
-      <enclosure url="{esc(ep['audio_url'])}" length="{ep['file_size']}" type="audio/mpeg" />
+      <enclosure url="{esc(audio)}" length="{ep['file_size']}" type="audio/mpeg" />
       <guid isPermaLink="false">{esc(ep['guid'])}</guid>
     </item>"""
 
@@ -950,7 +965,7 @@ def write_index(config, episodes):
         f"""      <li>
         <h2>{esc(ep['title'])}</h2>
         <p class="meta">{esc(ep['pub_date'])} &middot; {esc(ep.get('duration', ''))}</p>
-        <audio controls preload="none" src="{esc(ep['audio_url'])}"></audio>
+        <audio controls preload="none" src="{esc(tracked_url(ep['audio_url'], config))}"></audio>
         <p>{esc(ep['description'])}</p>
       </li>"""
         for ep in episodes[:20]

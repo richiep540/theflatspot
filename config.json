@@ -253,5 +253,6 @@
   "segment_gap_ms": 900,
   "target_word_count": 5720,
   "cover_image": "cover.jpg",
-  "sponsor_ad_text": ""
+  "sponsor_ad_text": "",
+  "download_prefix": "https://op3.dev/e/"
 }
